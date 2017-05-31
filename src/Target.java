@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 public class Target {
     public String url;
@@ -46,7 +47,6 @@ public class Target {
     // 分析页面
     private void parsePage(Document dc, String category,String parent){
         Elements shops = dc.select("div.shop-list").first().select("div.txt");
-        System.out.println("\n******* " + category + ":" + parent + " ******");
         for (Element sh:shops){
             String name = getShopName(sh);
             double[] scores = getShopScore(sh);
@@ -54,6 +54,7 @@ public class Target {
             System.out.println(name + " " + scores[1] + " " + address);
             surroundings.add(new Shop(name,category,parent,scores,address));
         }
+        System.out.println("\n");
     }
 
     // 获得商家名
@@ -85,13 +86,13 @@ public class Target {
         }
     }
 
-    //输出到CSV
-    public void printToCSV(String file) throws IOException{
-        writer = new BufferedWriter(new FileWriter(file));
+
+    public void writeTo(Set<String> strs, int num){
         Iterator<Shop> it = surroundings.iterator();
         while (it.hasNext()){
-            Shop s = it.next();
-            writer.write(s.print());
+            String s = it.next().print();
+            strs.add(s);
+            System.out.println("Added from " + num + ": " + s);
         }
     }
 
