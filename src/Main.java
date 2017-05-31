@@ -11,25 +11,40 @@ public class Main {
         String[] urls = new String[2];
         urls[0] = "http://www.dianping.com/search/around/1/0_2602612";
         urls[1] = "http://www.dianping.com/search/around/1/0_8872865";
-        ArrayList<Thread> threads = new ArrayList<Thread>();
-        for (int i = 0; i < 2; i++) {
-            threads.add(new Thread(new CrawlThread(urls[i],i+1,allStr)));
+        Set<String> allUrls = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+        ArrayList<Thread> preThreads = new ArrayList<Thread>();
+        for (int i = 1; i < 4; i++) {
+            preThreads.add(new Thread(new PreThread(i,allUrls)));
         }
-        for (int i = 0; i < 2; i++) {
-            threads.get(i).start();
+        for (int i = 0; i < 3; i++) {
+            preThreads.get(i).start();
         }
-        System.out.println("\n\n##########################################################################" +
-                "\n################################## Threading!!! ##########################\n\n\n");
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             try {
-                threads.get(i).join();
+                preThreads.get(i).join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("\n\n\n##########################################################################" +
-                "\n################################## Finishing!!! ##########################\n\n\n");
-        printToCSV("output.csv",allStr);
+//        ArrayList<Thread> threads = new ArrayList<Thread>();
+//        for (int i = 0; i < 2; i++) {
+//            threads.add(new Thread(new CrawlThread(urls[i],i+1,allStr)));
+//        }
+//        for (int i = 0; i < 2; i++) {
+//            threads.get(i).start();
+//        }
+//        System.out.println("\n\n##########################################################################" +
+//                "\n################################## Threading!!! ##########################\n\n\n");
+//        for (int i = 0; i < 2; i++) {
+//            try {
+//                threads.get(i).join();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        System.out.println("\n\n\n##########################################################################" +
+//                "\n################################## Finishing!!! ##########################\n\n\n");
+//        printToCSV("output.csv",allStr);
     }
 
     public static void printToCSV(String file, Set<String> strs) throws IOException{

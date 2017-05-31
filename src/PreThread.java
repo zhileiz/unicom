@@ -3,6 +3,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.URLEncoder;
 import java.util.Set;
 
 /**
@@ -22,16 +23,18 @@ public class PreThread implements Runnable {
     public void run() {
         String link = url + num;
         try {
-            Document doc = Jsoup.connect(link).get();
-            Elements shops = doc.select("div.shop-all-list").first().select("div.tit");
-            for(Element shop : shops){
-                String[] splitted = shop.attr("abs.href").split("/shop/");
-                System.out.println(splitted[1]);
-                try{
-                    System.out.println(Integer.parseInt(splitted[1]));
-                    urls.add("http://www.dianping.com/search/around/1/0_"+splitted[1]);
-                } catch (Exception e){
-                    System.out.println("can't parse!");
+            Document doc = Jsoup.connect(link.format(URLEncoder.encode("%E8%81%94%E9%80%9A%E8%90%A5%E4%B8%9A%E5%8E%85","GBK"))).get();
+            if (doc != null) {
+                Elements shops = doc.select("div.shop-all-list").first().select("div.tit");
+                for (Element shop : shops) {
+                    String[] splitted = shop.attr("abs.href").split("/shop/");
+                    System.out.println(splitted[1]);
+                    try {
+                        System.out.println(Integer.parseInt(splitted[1]));
+                        urls.add("http://www.dianping.com/search/around/1/0_" + splitted[1]);
+                    } catch (Exception e) {
+                        System.out.println("can't parse!");
+                    }
                 }
             }
         } catch (Exception e){
