@@ -6,19 +6,21 @@ import java.util.Set;
  */
 public class CrawlThread implements Runnable {
     String url;
+    String address;
     int threadNum;
     Set<String> strs;
 
-    public CrawlThread(String url, int num, Set<String> strs){
+    public CrawlThread(String url, int num, String address, Set<String> strs){
         this.url = url;
         this.threadNum = num;
         this.strs = strs;
+        this.address = address;
     }
 
     @Override
     public void run() {
         try {
-            Target tgt = new Target(url);
+            Target tgt = new Target(url,address);
             tgt.crawl();
             try {
                 tgt.writeTo(strs,threadNum);

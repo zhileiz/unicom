@@ -12,11 +12,13 @@ import java.util.Set;
 
 public class Target {
     public String url;
+    public String address;
     private HashSet<Shop> surroundings; //商家集
     private BufferedWriter writer; //输出
 
-    public Target(String url){
+    public Target(String url, String address){
         this.url = url;
+        this.address = address;
         surroundings = new HashSet<Shop>();
     }
 
@@ -90,7 +92,7 @@ public class Target {
     public void writeTo(Set<String> strs, int num){
         Iterator<Shop> it = surroundings.iterator();
         while (it.hasNext()){
-            String s = it.next().print();
+            String s = address + "," + it.next().print();
             strs.add(s);
             System.out.println("Added from " + num + ": " + s);
         }
